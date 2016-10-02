@@ -25,5 +25,9 @@ class SitemapGenerator implements EventSubscriberInterface
      */
     public function beforeRun(SourceSetEvent $sourceSetEvent)
     {
+        /** @var SourceInterface $source */
+        foreach ($sourceSetEvent->allSources() as $source) {
+            var_dump($source->data()->export());
+        }
     }
 }
