@@ -1,0 +1,25 @@
+{
+  "name": "nickpeirson/sculpin-sitemap-bundle",
+  "type": "library",
+  "keywords": ["sculpin", "sitemap"],
+  "description": "Sculpin sitemap bundle",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Nick Peirson",
+      "email": "nickpeirson@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0"
+  },
+  "require-dev": {
+    "sculpin/sculpin": ">=2.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Nickpeirson\\Sculpin\\Bundle\\SitemapBundle\\": ""
+    }
+  }
+}
