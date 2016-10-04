@@ -2,24 +2,31 @@
 namespace Nickpeirson\Sculpin\Bundle\SitemapBundle;
 
 use Dflydev\DotAccessConfiguration\Configuration;
+use Sculpin\Core\DataProvider\DataProviderInterface;
+use Sculpin\Core\Event\ConvertEvent;
+use Sculpin\Core\Event\FormatEvent;
 use Sculpin\Core\Event\SourceSetEvent;
 use Sculpin\Core\Permalink\Permalink;
 use Sculpin\Core\Sculpin;
 use Sculpin\Core\Source\AbstractSource;
 use Sculpin\Core\Source\MemorySource;
+use Sculpin\Core\Source\SourceSet;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SitemapGenerator implements EventSubscriberInterface
+class SitemapGenerator implements DataProviderInterface, EventSubscriberInterface
 {
+    protected $sitemap;
+    /** @var  SourceSet */
+    protected $sources;
 
     /**
      * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            Sculpin::EVENT_AFTER_FORMAT => 'afterFormat',
-        );
+        return [
+            Sculpin::EVENT_BEFORE_RUN => 'saveSourceSet'
+        ];
     }
 
     /**
@@ -27,13 +34,21 @@ class SitemapGenerator implements EventSubscriberInterface
      *
      * @param SourceSetEvent $sourceSetEvent Source Set Event
      */
-    public function afterFormat(SourceSetEvent $sourceSetEvent)
+    public function saveSourceSet(SourceSetEvent $sourceSetEvent)
     {
+        $this->sources = $sourceSetEvent->sourceSet();
+    }
+
+    protected function buildSitemap()
+    {
+        if (!empty($this->sitemap)) {
+            return $this->sitemap;
+        }
         $sitemap = [];
-        /** @var AbstractSource $source */
-        foreach ($sourceSetEvent->allSources() as $source) {
+        /** @var \Sculpin\Core\Source\FileSource $source */
+        foreach ($this->sources->allSources() as $source) {
             $data = $source->data()->export();
-            if (empty($data) || !$source->canBeFormatted()) {
+            if (empty($data) || $source->useFileReference()) {
                 continue;
             }
             $loc = $data['url'];
@@ -54,19 +69,17 @@ class SitemapGenerator implements EventSubscriberInterface
             }
             $sitemap[$url['loc']] = $url;
         }
-        $sitemapSource = new MemorySource(
-            'Sitemap',
-            new Configuration,
-            'sitemap',
-            print_r($sitemap, true),
-            'sitemap.xml',
-            'sitemap.xml',
-            null,
-            false,
-            false,
-            true
-        );
-        $sitemapSource->setPermalink(new Permalink('sitemap.xml', 'sitemap.xml'));
-        $sourceSetEvent->sourceSet()->mergeSource($sitemapSource);
+        $this->sitemap = $sitemap;
+    }
+
+    /**
+     * Provide data.
+     *
+     * @return array
+     */
+    public function provideData()
+    {
+        $this->buildSitemap();
+        return $this->sitemap;
     }
 }
