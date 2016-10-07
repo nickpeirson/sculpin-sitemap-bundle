@@ -51,6 +51,13 @@ class SitemapGenerator implements DataProviderInterface, EventSubscriberInterfac
             if (empty($data) || $source->useFileReference()) {
                 continue;
             }
+            $sitemapData = [];
+            if (isset($data['sitemap'])) {
+                $sitemapData = $data['sitemap'];
+            }
+            if (isset($sitemapData['_exclude'])) {
+                continue;
+            }
             $loc = $data['url'];
             if (isset($data['canonical'])) {
                 $loc = $data['canonical'];

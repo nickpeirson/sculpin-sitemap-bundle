@@ -15,8 +15,10 @@ The sitemap generator will iterate over all sculpin sources that aren't used int
 * Add the following to your `sculpin.json` file:
 
 ```json
-"require": {
-  "nickpeirson/sculpin-sitemap-bundle": "~0.1"
+{
+  "require": {
+    "nickpeirson/sculpin-sitemap-bundle": "~0.1.1"
+  }
 }
 ```
 
@@ -58,7 +60,13 @@ sitemap:
   changefreq: monthly
   priority: 0.8
 ```
-The primary use case is to generate an XML sitemap, but you could also use this data for generating a HTML sitemap if you anotated the sitemap data appropriately.
+
+It is also possible to exclude files from the sitemap by adding the `_exclude` key to the pages `sitemap` parameter with any truthy value, e.g.:
+```yaml
+sitemap:
+  _exclude: 1
+```
+The primary use case for `data.sitemap` is for use in an XML sitemap template, but you could also use this data for generating a HTML sitemap if you anotated the sitemap data appropriately.
 
 It's also worth being aware that the `sitemap` data is keyed by the `loc` field, so if you have multiple sources that result in the same `loc`, the last one will be present in the data.
 
