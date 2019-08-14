@@ -84,7 +84,7 @@ class SitemapGenerator implements DataProviderInterface, EventSubscriberInterfac
      *
      * @return array
      */
-    public function provideData()
+    public function provideData(): array
     {
         $this->buildSitemap();
         return $this->sitemap;
