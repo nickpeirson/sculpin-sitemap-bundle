@@ -5,9 +5,9 @@
 
     <services>
         <service id="sculpin_sitemap.event.sitemap_generator" class="Nickpeirson\Sculpin\Bundle\SitemapBundle\SitemapGenerator">
+            <argument>%sculpin_sitemap.source_data_fields%</argument>
             <tag name="kernel.event_subscriber" />
             <tag name="sculpin.data_provider" alias="sitemap" />
         </service>
     </services>
-
 </container>

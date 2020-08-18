@@ -93,13 +93,20 @@ It's also worth being aware that the `sitemap` data is keyed by the `loc` field,
     {% endfor %}
     </urlset>
 
+### Add existing source data
+It's possible to use existing source data by adding the following configuration to `sculpin_kernel.yml`, demonstrated below by mapping the title:
+```yaml
+sculpin_sitemap:
+  source_data_fields: [ 'title' ]
+```
+Now you can use `url.title` in your template.
+
 ## Contributing
 
 PRs greatfully recieved
 
 ## Roadmap
 
-* Add configuration to allow adding fields from source data to the sitemap. This would allow for reuse of existing data rather than needing to be duplicated in the source's `sitemap` data, e.g. title.
 * Further to using existing source data, allow mapping from source data to `sitemap`. This would allow for overriding sitemap fields with existing data, e.g. mapping `page.canonical_url`  override `url` for entries in `data.sitemap`.
 
 ## License

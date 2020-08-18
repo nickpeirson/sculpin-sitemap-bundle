@@ -18,6 +18,13 @@ class SitemapGenerator implements DataProviderInterface, EventSubscriberInterfac
     protected $sitemap;
     /** @var  SourceSet */
     protected $sources;
+    /** @var array */
+    protected $sourceDataFields;
+
+    public function __construct(array $fields = [])
+    {
+        $this->sourceDataFields = $fields;
+    }
 
     /**
      * {@inheritdoc}
@@ -71,6 +78,11 @@ class SitemapGenerator implements DataProviderInterface, EventSubscriberInterfac
                 'loc' => $loc,
                 'lastmod' => $lastmod
             ];
+            foreach ($this->sourceDataFields as $field) {
+                if (isset($data[ $field ])) {
+                    $url[ $field ] = $data[ $field ];
+                }
+            }
             if (isset($data['sitemap'])) {
                 $url = array_merge($url, $data['sitemap']);
             }
